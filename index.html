@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game with Stickers</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+</head>
+<body>
+    <script>
+       let x, y, m, n;
+        let speedX = 2, speedY = 2;
+        let scene = 0;
+        let ochko = 0;
+        let stickers = [];
+        let currentSticker;
+        let back;
+
+        function preload() {
+            stickers.push(loadImage('sticker1.png'));
+            stickers.push(loadImage('sticker2.png'));
+            
+        }
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            x = width / 2 - 75;
+            y = height / 2;
+            m = random(100, width - 100);
+            n = random(100, height - 100);
+            currentSticker = random(stickers);
+        }
+
+        function drawScene0() {   
+            background('lightblue');
+            textSize(40);
+            textAlign(CENTER, CENTER);
+            
+            fill(170, 20, 250);
+            rect(x, y, 150, 50, 10);
+            fill(200, 170, 160); 
+            text("Exit", x + 75, y + 25);
+
+            fill(190, 50, 30);
+            rect(x, y + 70, 150, 50, 10);
+            fill(200, 190, 40);
+            textSize(30);
+            text("Instruction", x + 75, y + 95);
+
+            fill(35, 60, 100);
+            rect(x, y + 140, 150, 50, 10);
+            fill(255);
+            text("Start", x + 75, y + 165);
+        }
+
+        function drawScene2() {
+            background('lightblue');
+            fill('orange');
+            rect(width - 200, height - 100, 150, 50, 10);
+            fill('black');
+            textSize(35);
+            text("Ochko: " + ochko, width - 125, height - 75);
+            
+            image(currentSticker, m, n, 80, 80);
+            
+            if (m >= width - 80 || m <= 0) {
+                speedX = -speedX;
+            }
+            if (n >= height - 80 || n <= 0) {
+                speedY = -speedY;
+            }
+            m += speedX;
+            n += speedY;
+        }
+
+        function draw() {
+            if (scene === 0) {
+                drawScene0();
+            } else if (scene === 2) {
+                drawScene2();
+            }
+        }
+
+        function mousePressed() {
+            if (scene === 0) {
+                if (mouseX >= x && mouseX <= x + 150 && mouseY >= y + 140 && mouseY <= y + 190) {
+                    scene = 2;
+                }
+            }
+            
+            if (scene === 2) {
+                let d = dist(mouseX, mouseY, m + 40, n + 40);
+                if (d < 40) {
+                    ochko++; 
+                    m = random(100, width - 100);
+                    n = random(100, height - 100);
+                    currentSticker = random(stickers);
+                    speedX = random([-5, -4, -3, 3, 4, 5]);
+                    speedY = random([-5, -4, -3, 3, 4, 5]);
+                }
+            }
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+    </script>
+</body>
+</html>
